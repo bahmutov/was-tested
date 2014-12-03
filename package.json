@@ -1,7 +1,7 @@
 {
   "name": "was-tested",
   "description": "Code coverage proxy",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": "Gleb Bahmutov <gleb.bahmutov@gmail.com>",
   "bin": {
     "was-tested": "./index.js"
@@ -40,6 +40,7 @@
   "license": "MIT",
   "main": "index.js",
   "pre-commit": "npm test",
+  "preferGlobal": true,
   "repository": {
     "type": "git",
     "url": "git@github.com:bahmutov/was-tested.git"

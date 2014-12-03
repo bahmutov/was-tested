@@ -16,6 +16,15 @@ var info = pkg.name + ' - ' + pkg.description + '\n' +
     '  version: ' + pkg.version + '\n' +
     '  author: ' + JSON.stringify(pkg.author);
 
+var updateNotifier = require('update-notifier');
+var notifier = updateNotifier({
+  packageName: pkg.name,
+  packageVersion: pkg.version
+});
+if (notifier.update) {
+  notifier.notify();
+}
+
 var program = optimist
   .option('version', {
     boolean: true,

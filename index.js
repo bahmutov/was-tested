@@ -4,9 +4,34 @@ var istanbul = require('istanbul');
 var instrumenter = new istanbul.Instrumenter();
 var fs = require('fs');
 var path = require('path');
-
+var optimist = require('optimist');
 var http = require('http'),
   httpProxy = require('http-proxy');
+
+var pkg = require('./package.json');
+var info = pkg.name + ' - ' + pkg.description + '\n' +
+    '  version: ' + pkg.version + '\n' +
+    '  author: ' + JSON.stringify(pkg.author);
+
+var program = optimist
+  .option('version', {
+    boolean: true,
+    alias: 'v',
+    description: 'show version and exit',
+    default: false
+  })
+  .usage(info)
+  .argv;
+
+  if (program.version) {
+    console.log(info);
+    process.exit(0);
+  }
+
+  if (program.help || program.h) {
+    optimist.showHelp();
+    process.exit(0);
+  }
 
 function shouldBeInstrumented(url) {
   la(check.unemptyString(url), 'expected url string');

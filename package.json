@@ -29,6 +29,7 @@
     "check-types": "1.4.0",
     "http-proxy": "1.7.1",
     "istanbul": "0.3.2",
-    "lazy-ass": "0.5.3"
+    "lazy-ass": "0.5.3",
+    "optimist": "0.6.1"
   }
 }

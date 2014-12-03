@@ -2,6 +2,8 @@ require('lazy-ass');
 var check = require('check-types');
 var istanbul = require('istanbul');
 var instrumenter = new istanbul.Instrumenter();
+var fs = require('fs');
+var path = require('path');
 
 var http = require('http'),
   httpProxy = require('http-proxy');
@@ -31,7 +33,27 @@ function writeCoverage(coverage) {
   var collector = new Collector();
   collector.add(coverage);
   var summaryReport = Report.create('text-summary');
-  summaryReport.writeReport(collector, true);
+  summaryReport.writeReport(collector);
+  var htmlReport = Report.create('html');
+  htmlReport.writeReport(collector, true);
+}
+
+function prepareSaveDir() {
+  var saveFolder = './saved/';
+  if (!fs.existsSync(saveFolder)) {
+    fs.mkdirSync(saveFolder);
+  }
+  return saveFolder;
+}
+var saveFolder = prepareSaveDir();
+
+function saveSourceFile(src, url) {
+  la(check.unemptyString(src), 'missing file source');
+  la(check.unemptyString(url), 'missing url');
+  var filename = url.replace(/\//g, '_');
+  var fullFilename = path.join(saveFolder, filename);
+  fs.writeFileSync(fullFilename, src);
+  return fullFilename;
 }
 
 function prepareResponseSelectors(proxyRes, req, res) {
@@ -64,7 +86,8 @@ function prepareResponseSelectors(proxyRes, req, res) {
   };
 
   res.end = function (data, encoding) {
-    var instrumented = instrumenter.instrumentSync(scriptSrc, req.url);
+    var filename = saveSourceFile(scriptSrc, req.url);
+    var instrumented = instrumenter.instrumentSync(scriptSrc, filename);
     instrumented += '\n\n';
     instrumented += sendCoverageBackToProxy.toString() + '\n';
     instrumented += 'sendCoverageBackToProxy();\n';

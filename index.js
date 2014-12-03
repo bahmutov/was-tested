@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 require('lazy-ass');
+var ecstatic = require('ecstatic');
 var check = require('check-types');
 var istanbul = require('istanbul');
 var Collector = istanbul.Collector;
@@ -111,7 +112,6 @@ function writeCoverageReports(coverage) {
   htmlReport.writeReport(collector, true);
 }
 
-
 var coverageFilename = './coverage.json';
 
 if (program.reset) {
@@ -202,6 +202,18 @@ function prepareResponseSelectors(proxyRes, req, res) {
 //
 var proxy = httpProxy.createProxyServer({});
 
+var savedReportDir = './html-report';
+var getReportUrlPrefix = '__report/';
+
+var reportServer = ecstatic({
+  root: savedReportDir,
+  baseDir: getReportUrlPrefix
+});
+
+function isGetReportRequest(url) {
+  return url.indexOf(getReportUrlPrefix) === 1;
+}
+
 //
 // Create your custom server and just call `proxy.web()` to proxy
 // a web request to the target passed in the options
@@ -210,8 +222,10 @@ var proxy = httpProxy.createProxyServer({});
 var server = http.createServer(function(req, res) {
   // You can define here your custom logic to handle the request
   // and then proxy the request.
-  console.log('proxy request', req.url);
-  if (req.url === '/__coverage') {
+  if (isGetReportRequest(req.url)) {
+    console.log('coverage report', req.url);
+    reportServer(req, res);
+  } else if (req.url === '/__coverage') {
     console.log('received coverage info');
     var str = '';
     req.on('data', function (chunk) {
@@ -226,6 +240,7 @@ var server = http.createServer(function(req, res) {
     res.writeHead(200);
     res.end();
   } else {
+    console.log('proxy request', req.url);
     proxy.web(req, res, { target: program.target });
   }
 });

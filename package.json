@@ -1,7 +1,7 @@
 {
   "name": "was-tested",
   "description": "Code coverage proxy",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "author": "Gleb Bahmutov <gleb.bahmutov@gmail.com>",
   "bin": {
     "was-tested": "./index.js"
@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "check-types": "1.4.0",
+    "ecstatic": "0.5.7",
     "http-proxy": "1.7.1",
     "istanbul": "0.3.2",
     "lazy-ass": "0.5.3",

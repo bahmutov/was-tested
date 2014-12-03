@@ -24,5 +24,11 @@
   "bugs": {
     "url": "https://github.com/bahmutov/was-tested/issues"
   },
-  "homepage": "https://github.com/bahmutov/was-tested"
+  "homepage": "https://github.com/bahmutov/was-tested",
+  "dependencies": {
+    "check-types": "1.4.0",
+    "http-proxy": "1.7.1",
+    "istanbul": "0.3.2",
+    "lazy-ass": "0.5.3"
+  }
 }

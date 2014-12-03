@@ -20,18 +20,32 @@ var program = optimist
     description: 'show version and exit',
     default: false
   })
+  .option('target', {
+    string: true,
+    alias: 't',
+    description: 'target server url',
+    default: 'http://127.0.0.1:3003'
+  })
+  .option('port', {
+    number: true,
+    alias: 'p',
+    description: 'local proxy port',
+    default: 5050
+  })
   .usage(info)
   .argv;
 
-  if (program.version) {
-    console.log(info);
-    process.exit(0);
-  }
+if (program.version) {
+  console.log(info);
+  process.exit(0);
+}
 
-  if (program.help || program.h) {
-    optimist.showHelp();
-    process.exit(0);
-  }
+if (program.help || program.h) {
+  optimist.showHelp();
+  process.exit(0);
+}
+
+la(check.unemptyString(program.target), 'missing target server url', program);
 
 function shouldBeInstrumented(url) {
   la(check.unemptyString(url), 'expected url string');
@@ -152,7 +166,7 @@ var server = http.createServer(function(req, res) {
     res.writeHead(200);
     res.end();
   } else {
-    proxy.web(req, res, { target: 'http://127.0.0.1:3003' });
+    proxy.web(req, res, { target: program.target });
   }
 });
 
@@ -164,5 +178,5 @@ proxy.on('proxyRes', function (proxyRes, req, res) {
   }
 });
 
-console.log("listening on port 5050")
-server.listen(5050);
+console.log('listening on port', program.port);
+server.listen(program.port);

@@ -39,7 +39,7 @@ var program = optimist
     string: true,
     alias: 'i',
     description: 'instrument url RegExp',
-    default: 'app\.js$'
+    default: 'app.js$'
   })
   .option('reset', {
     boolean: true,
@@ -73,6 +73,7 @@ var shouldBeInstrumented = instrumentUrl.bind(null, new RegExp(program.instrumen
 // this function will be embedded into the client JavaScript code
 // so it makes no sense to lint it here
 function setupCoverageSend() {
+  /* jshint ignore:start */
   if (typeof window.__sendCoverageSetup === 'undefined') {
     (function sendCoverageBackToProxy() {
       setInterval(function sendCoverage() {
@@ -85,6 +86,7 @@ function setupCoverageSend() {
       window.__sendCoverageSetup = true;
     }());
   }
+  /* jshint ignore:end */
 }
 
 function writeCoverageReports(coverage) {
@@ -168,11 +170,14 @@ function prepareResponseSelectors(proxyRes, req, res) {
     _writeHead.apply(res, arguments);
   };
 
-  res.write = function (chunk, encoding) {
+  res.write = function (chunk) {
     scriptSrc += chunk;
   };
 
-  res.end = function (data, encoding) {
+  res.end = function (data) {
+    if (data) {
+      scriptSrc += data;
+    }
     var filename = saveSourceFile(scriptSrc, req.url);
     var instrumented = instrumenter.instrumentSync(scriptSrc, filename);
     instrumented += '\n\n';

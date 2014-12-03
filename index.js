@@ -11,6 +11,8 @@ function shouldBeInstrumented(url) {
   return /app\.js$/.test(url);
 }
 
+// this function will be embedded into the client JavaScript code
+// so it makes no sense to lint it here
 function sendCoverageBackToProxy() {
   setTimeout(function sendCoverage() {
     console.log('sending coverage to the server');
@@ -19,6 +21,17 @@ function sendCoverageBackToProxy() {
     request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
     request.send(JSON.stringify(__coverage__));
   }, 1000);
+}
+
+function writeCoverage(coverage) {
+  la(check.object(coverage), 'missing coverage object');
+  var Collector = istanbul.Collector;
+  var Report = istanbul.Report;
+
+  var collector = new Collector();
+  collector.add(coverage);
+  var summaryReport = Report.create('text-summary');
+  summaryReport.writeReport(collector, true);
 }
 
 function prepareResponseSelectors(proxyRes, req, res) {
@@ -85,6 +98,8 @@ var server = http.createServer(function(req, res) {
       // console.log(coverage);
       require('fs').writeFileSync('./coverage.json', JSON.stringify(coverage, null, '  '));
       console.log('saved coverage to coverage.json');
+
+      writeCoverage(coverage);
     });
     res.writeHead(200);
     res.end();

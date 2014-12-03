@@ -32,6 +32,12 @@ var program = optimist
     description: 'local proxy port',
     default: 5050
   })
+  .option('instrument', {
+    string: true,
+    alias: 'i',
+    description: 'instrument url RegExp',
+    default: 'app\.js$'
+  })
   .usage(info)
   .argv;
 
@@ -47,10 +53,13 @@ if (program.help || program.h) {
 
 la(check.unemptyString(program.target), 'missing target server url', program);
 
-function shouldBeInstrumented(url) {
+function instrumentUrl(regex, url) {
+  la(check.instance(regex, RegExp), 'not a regex', regex);
   la(check.unemptyString(url), 'expected url string');
-  return /app\.js$/.test(url);
+  return regex.test(url);
 }
+
+var shouldBeInstrumented = instrumentUrl.bind(null, new RegExp(program.instrument));
 
 // this function will be embedded into the client JavaScript code
 // so it makes no sense to lint it here
@@ -110,6 +119,7 @@ function prepareResponseSelectors(proxyRes, req, res) {
   res.writeHead = function (code, headers) {
     var contentType = this.getHeader('content-type');
     console.log('writing head', contentType);
+    la(check.unemptyString(contentType), 'missing content type for code', code);
 
     // Strip off the content length since it will change.
     res.removeHeader('Content-Length');

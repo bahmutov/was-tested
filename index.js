@@ -11,6 +11,16 @@ function shouldBeInstrumented(url) {
   return /app\.js$/.test(url);
 }
 
+function sendCoverageBackToProxy() {
+  setTimeout(function sendCoverage() {
+    console.log('sending coverage to the server');
+    var request = new XMLHttpRequest();
+    request.open('POST', '/__coverage', true);
+    request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+    request.send(JSON.stringify(__coverage__));
+  }, 1000);
+}
+
 function prepareResponseSelectors(proxyRes, req, res) {
   var _write      = res.write;
   var _end        = res.end;
@@ -42,6 +52,9 @@ function prepareResponseSelectors(proxyRes, req, res) {
 
   res.end = function (data, encoding) {
     var instrumented = instrumenter.instrumentSync(scriptSrc, req.url);
+    instrumented += '\n\n';
+    instrumented += sendCoverageBackToProxy.toString() + '\n';
+    instrumented += 'sendCoverageBackToProxy();\n';
     _write.call(res, instrumented);
     _end.call(res);
   };
@@ -61,7 +74,23 @@ var server = http.createServer(function(req, res) {
   // You can define here your custom logic to handle the request
   // and then proxy the request.
   console.log('proxy request', req.url);
-  proxy.web(req, res, { target: 'http://127.0.0.1:3003' });
+  if (req.url === '/__coverage') {
+    console.log('received coverage info');
+    var str = '';
+    req.on('data', function (chunk) {
+      str += chunk;
+    });
+    req.on('end', function () {
+      var coverage = JSON.parse(str);
+      // console.log(coverage);
+      require('fs').writeFileSync('./coverage.json', JSON.stringify(coverage, null, '  '));
+      console.log('saved coverage to coverage.json');
+    });
+    res.writeHead(200);
+    res.end();
+  } else {
+    proxy.web(req, res, { target: 'http://127.0.0.1:3003' });
+  }
 });
 
 proxy.on('proxyRes', function (proxyRes, req, res) {

@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 require('lazy-ass');
 var check = require('check-types');
 var istanbul = require('istanbul');

@@ -16,13 +16,13 @@ function shouldBeInstrumented(url) {
 // this function will be embedded into the client JavaScript code
 // so it makes no sense to lint it here
 function sendCoverageBackToProxy() {
-  setTimeout(function sendCoverage() {
+  setInterval(function sendCoverage() {
     console.log('sending coverage to the server');
     var request = new XMLHttpRequest();
     request.open('POST', '/__coverage', true);
     request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
     request.send(JSON.stringify(__coverage__));
-  }, 1000);
+  }, 5000);
 }
 
 function writeCoverage(coverage) {
@@ -39,7 +39,7 @@ function writeCoverage(coverage) {
 }
 
 function prepareSaveDir() {
-  var saveFolder = './saved/';
+  var saveFolder = './scripts/';
   if (!fs.existsSync(saveFolder)) {
     fs.mkdirSync(saveFolder);
   }
@@ -50,7 +50,7 @@ var saveFolder = prepareSaveDir();
 function saveSourceFile(src, url) {
   la(check.unemptyString(src), 'missing file source');
   la(check.unemptyString(url), 'missing url');
-  var filename = url.replace(/\//g, '_');
+  var filename = url.replace(/^\//, '');
   var fullFilename = path.join(saveFolder, filename);
   fs.writeFileSync(fullFilename, src);
   return fullFilename;

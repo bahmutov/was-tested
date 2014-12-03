@@ -2,3 +2,4 @@ node_modules/
 coverage.json
 saved/
 html-report/
+scripts/

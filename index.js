@@ -11,7 +11,7 @@ var path = require('path');
 var optimist = require('optimist');
 var http = require('http'),
   httpProxy = require('http-proxy');
-
+var savedReportDir = './html-report';
 var pkg = require('./package.json');
 var info = pkg.name + ' - ' + pkg.description + '\n' +
     '  version: ' + pkg.version + '\n' +
@@ -112,19 +112,23 @@ function writeCoverageReports(coverage) {
   htmlReport.writeReport(collector, true);
 }
 
-var coverageFilename = './coverage.json';
-
 if (program.reset) {
   if (fs.existsSync(coverageFilename)) {
     fs.unlinkSync(coverageFilename);
     console.log('deleted previous coverage file', coverageFilename);
   }
 }
+var coverageFilename = path.join(savedReportDir, 'coverage.json');
+
+if (!fs.existsSync(savedReportDir)) {
+  fs.mkdirSync(savedReportDir);
+  console.log('created folder', savedReportDir);
+}
 
 function combineCoverage(coverage) {
   var collector = new Collector();
   if (fs.existsSync(coverageFilename)) {
-    collector.add(require(coverageFilename));
+    collector.add(JSON.parse(fs.readFileSync(coverageFilename, 'utf8')));
   }
   collector.add(coverage);
   var combined = collector.getFinalCoverage();
@@ -201,8 +205,6 @@ function prepareResponseSelectors(proxyRes, req, res) {
 // Create a proxy server with custom application logic
 //
 var proxy = httpProxy.createProxyServer({});
-
-var savedReportDir = './html-report';
 var getReportUrlPrefix = '__report/';
 
 var reportServer = ecstatic({

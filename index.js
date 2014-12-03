@@ -39,6 +39,12 @@ var program = optimist
     description: 'instrument url RegExp',
     default: 'app\.js$'
   })
+  .option('reset', {
+    boolean: true,
+    alias: 'r',
+    description: 'erase previously collected coverage',
+    default: false
+  })
   .usage(info)
   .argv;
 
@@ -92,16 +98,25 @@ function writeCoverageReports(coverage) {
   htmlReport.writeReport(collector, true);
 }
 
+
+var coverageFilename = './coverage.json';
+
+if (program.reset) {
+  if (fs.existsSync(coverageFilename)) {
+    fs.unlinkSync(coverageFilename);
+    console.log('deleted previous coverage file', coverageFilename);
+  }
+}
+
 function combineCoverage(coverage) {
-  var filename = './coverage.json';
   var collector = new Collector();
-  if (fs.existsSync(filename)) {
-    collector.add(require(filename));
+  if (fs.existsSync(coverageFilename)) {
+    collector.add(require(coverageFilename));
   }
   collector.add(coverage);
   var combined = collector.getFinalCoverage();
-  fs.writeFileSync(filename, JSON.stringify(combined, null, '  '));
-  console.log('saved combined coverage to', filename);
+  fs.writeFileSync(coverageFilename, JSON.stringify(combined, null, '  '));
+  console.log('saved combined coverage to', coverageFilename);
   return combined;
 }
 

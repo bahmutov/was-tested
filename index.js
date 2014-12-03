@@ -1,6 +1,7 @@
 require('lazy-ass');
 var check = require('check-types');
 var istanbul = require('istanbul');
+var Collector = istanbul.Collector;
 var instrumenter = new istanbul.Instrumenter();
 var fs = require('fs');
 var path = require('path');
@@ -78,17 +79,30 @@ function setupCoverageSend() {
   }
 }
 
-function writeCoverage(coverage) {
+function writeCoverageReports(coverage) {
   la(check.object(coverage), 'missing coverage object');
-  var Collector = istanbul.Collector;
   var Report = istanbul.Report;
 
   var collector = new Collector();
   collector.add(coverage);
+
   var summaryReport = Report.create('text-summary');
   summaryReport.writeReport(collector);
   var htmlReport = Report.create('html');
   htmlReport.writeReport(collector, true);
+}
+
+function combineCoverage(coverage) {
+  var filename = './coverage.json';
+  var collector = new Collector();
+  if (fs.existsSync(filename)) {
+    collector.add(require(filename));
+  }
+  collector.add(coverage);
+  var combined = collector.getFinalCoverage();
+  fs.writeFileSync(filename, JSON.stringify(combined, null, '  '));
+  console.log('saved combined coverage to', filename);
+  return combined;
 }
 
 function prepareSaveDir() {
@@ -174,11 +188,9 @@ var server = http.createServer(function(req, res) {
     });
     req.on('end', function () {
       var coverage = JSON.parse(str);
-      // console.log(coverage);
-      require('fs').writeFileSync('./coverage.json', JSON.stringify(coverage, null, '  '));
-      console.log('saved coverage to coverage.json');
 
-      writeCoverage(coverage);
+      var combined = combineCoverage(coverage);
+      writeCoverageReports(combined);
     });
     res.writeHead(200);
     res.end();

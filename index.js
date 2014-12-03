@@ -98,7 +98,15 @@ var saveFolder = prepareSaveDir();
 function saveSourceFile(src, url) {
   la(check.unemptyString(src), 'missing file source');
   la(check.unemptyString(url), 'missing url');
-  var filename = url.replace(/^\//, '');
+
+  // just leave filename
+  var stripParams = url.replace(/\?.*$/, '');
+  var lastSlash = stripParams.lastIndexOf('/');
+  if (lastSlash !== -1) {
+    stripParams = stripParams.substr(lastSlash + 1);
+  }
+  var filename = stripParams;
+  console.log('url', url, 'filename', filename);
   var fullFilename = path.join(saveFolder, filename);
   fs.writeFileSync(fullFilename, src);
   return fullFilename;
@@ -181,7 +189,7 @@ var server = http.createServer(function(req, res) {
 });
 
 proxy.on('proxyRes', function (proxyRes, req, res) {
-  console.log('RAW Response from the target', JSON.stringify(proxyRes.headers, true, 2));
+  // console.log('RAW Response from the target', JSON.stringify(proxyRes.headers, true, 2));
   if (shouldBeInstrumented(req.url)) {
     console.log('will instrument', req.url);
     prepareResponseSelectors(proxyRes, req, res);

@@ -63,14 +63,19 @@ var shouldBeInstrumented = instrumentUrl.bind(null, new RegExp(program.instrumen
 
 // this function will be embedded into the client JavaScript code
 // so it makes no sense to lint it here
-function sendCoverageBackToProxy() {
-  setInterval(function sendCoverage() {
-    console.log('sending coverage to the server');
-    var request = new XMLHttpRequest();
-    request.open('POST', '/__coverage', true);
-    request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-    request.send(JSON.stringify(__coverage__));
-  }, 5000);
+function setupCoverageSend() {
+  if (typeof window.__sendCoverageSetup === 'undefined') {
+    (function sendCoverageBackToProxy() {
+      setInterval(function sendCoverage() {
+        console.log('sending coverage to the server');
+        var request = new XMLHttpRequest();
+        request.open('POST', '/__coverage', true);
+        request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        request.send(JSON.stringify(__coverage__));
+      }, 5000);
+      window.__sendCoverageSetup = true;
+    }());
+  }
 }
 
 function writeCoverage(coverage) {
@@ -107,6 +112,7 @@ function saveSourceFile(src, url) {
   }
   var filename = stripParams;
   console.log('url', url, 'filename', filename);
+
   var fullFilename = path.join(saveFolder, filename);
   fs.writeFileSync(fullFilename, src);
   return fullFilename;
@@ -117,12 +123,6 @@ function prepareResponseSelectors(proxyRes, req, res) {
   var _end        = res.end;
   var _writeHead  = res.writeHead;
   var scriptSrc = '';
-
-  /*
-  proxyRes.on('data', function (chunk) {
-    // console.log('proxy response data');
-    scriptSrc += chunk;
-  });*/
 
   res.writeHead = function (code, headers) {
     var contentType = this.getHeader('content-type');
@@ -139,15 +139,14 @@ function prepareResponseSelectors(proxyRes, req, res) {
 
   res.write = function (chunk, encoding) {
     scriptSrc += chunk;
-    // _write.apply(res, arguments);
   };
 
   res.end = function (data, encoding) {
     var filename = saveSourceFile(scriptSrc, req.url);
     var instrumented = instrumenter.instrumentSync(scriptSrc, filename);
     instrumented += '\n\n';
-    instrumented += sendCoverageBackToProxy.toString() + '\n';
-    instrumented += 'sendCoverageBackToProxy();\n';
+    instrumented += setupCoverageSend.toString() + '\n';
+    instrumented += 'setupCoverageSend();\n';
     _write.call(res, instrumented);
     _end.call(res);
   };

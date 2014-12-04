@@ -17,14 +17,7 @@ var info = pkg.name + ' - ' + pkg.description + '\n' +
     '  version: ' + pkg.version + '\n' +
     '  author: ' + JSON.stringify(pkg.author);
 
-var updateNotifier = require('update-notifier');
-var notifier = updateNotifier({
-  packageName: pkg.name,
-  packageVersion: pkg.version
-});
-if (notifier.update) {
-  notifier.notify();
-}
+require('./src/check-updates')();
 
 var program = optimist
   .option('version', {
@@ -254,5 +247,5 @@ proxy.on('proxyRes', function (proxyRes, req, res) {
   }
 });
 
-console.log('listening on port', program.port);
+console.log(pkg.name, 'listening on port', program.port);
 server.listen(program.port);

@@ -244,11 +244,13 @@ var server = http.createServer(function (req, res) {
 });
 
 proxy.on('proxyRes', function (proxyRes, req, res) {
+  proxyReq.setHeader('X-Forwarded-Proto', 'https');
   console.log('RAW Response from the target', JSON.stringify(proxyRes.headers, true, 2));
   if (shouldBeInstrumented(req.url)) {
     console.log('will instrument', req.url);
     prepareResponseSelectors(proxyRes, req, res);
   }
+});
 });
 
 proxy.on('error', function (err, req, res) {

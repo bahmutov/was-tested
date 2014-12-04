@@ -7,6 +7,7 @@
 [![Build status][was-tested-ci-image] ][was-tested-ci-url]
 [![dependencies][was-tested-dependencies-image] ][was-tested-dependencies-url]
 [![devdependencies][was-tested-devdependencies-image] ][was-tested-devdependencies-url]
+[![Codacy Badge][was-tested-codacy-image] ][was-tested-codacy-url]
 
 ### Small print
 
@@ -56,3 +57,5 @@ OTHER DEALINGS IN THE SOFTWARE.
 [was-tested-dependencies-url]: https://david-dm.org/bahmutov/was-tested
 [was-tested-devdependencies-image]: https://david-dm.org/bahmutov/was-tested/dev-status.png
 [was-tested-devdependencies-url]: https://david-dm.org/bahmutov/was-tested#info=devDependencies
+[was-tested-codacy-image]: https://www.codacy.com/project/badge/c2b210ee4fde4f21a7f9c6cc41078e30
+[was-tested-codacy-url]: https://www.codacy.com/public/bahmutov/was-tested.git

@@ -72,32 +72,16 @@ if (program.help || program.h) {
 
 la(check.unemptyString(program.target), 'missing target server url', program);
 
-function instrumentUrl(regex, url) {
+function shouldInstrument(regex, url) {
   la(check.instance(regex, RegExp), 'not a regex', regex);
   la(check.unemptyString(url), 'expected url string');
   return regex.test(url);
 }
 
-var shouldBeInstrumented = instrumentUrl.bind(null, new RegExp(program.instrument));
+var shouldBeInstrumented = shouldInstrument.bind(null, new RegExp(program.instrument));
 
-// this function will be embedded into the client JavaScript code
-// so it makes no sense to lint it here
-function setupCoverageSend() {
-  /* jshint ignore:start */
-  if (typeof window.__sendCoverageSetup === 'undefined') {
-    (function sendCoverageBackToProxy() {
-      setInterval(function sendCoverage() {
-        console.log('sending coverage to the server');
-        var request = new XMLHttpRequest();
-        request.open('POST', '/__coverage', true);
-        request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-        request.send(JSON.stringify(__coverage__));
-      }, 5000);
-      window.__sendCoverageSetup = true;
-    }());
-  }
-  /* jshint ignore:end */
-}
+var setupCoverageSend = require('./src/send-coverage');
+la(check.fn(setupCoverageSend), 'missing send coverage function');
 
 function writeCoverageReports(coverage) {
   la(check.object(coverage), 'missing coverage object');

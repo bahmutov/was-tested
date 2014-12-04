@@ -9,6 +9,7 @@
   "bugs": {
     "url": "https://github.com/bahmutov/was-tested/issues"
   },
+  "contributors": [],
   "dependencies": {
     "check-types": "1.4.0",
     "ecstatic": "0.5.7",

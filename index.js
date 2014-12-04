@@ -221,13 +221,14 @@ function isGetReportRequest(url) {
 // a web request to the target passed in the options
 // also you can use `proxy.ws()` to proxy a websockets request
 //
-var server = http.createServer(function(req, res) {
+var server = http.createServer(function (req, res) {
   // You can define here your custom logic to handle the request
   // and then proxy the request.
-  if (isGetReportRequest(req.url)) {
+
+  if (req.method === 'GET' && isGetReportRequest(req.url)) {
     console.log('coverage report', req.url);
     reportServer(req, res);
-  } else if (req.url === '/__coverage') {
+  } else if (req.method === 'POST' && req.url === '/__coverage') {
     console.log('received coverage info');
     var str = '';
     req.on('data', function (chunk) {
@@ -235,14 +236,13 @@ var server = http.createServer(function(req, res) {
     });
     req.on('end', function () {
       var coverage = JSON.parse(str);
-
       var combined = combineCoverage(coverage);
       writeCoverageReports(combined);
     });
     res.writeHead(200);
     res.end();
   } else {
-    console.log('proxy request', req.url);
+    console.log('proxy', req.method, req.url);
     proxy.web(req, res, { target: program.target });
   }
 });

@@ -112,13 +112,18 @@ function writeCoverageReports(coverage) {
   htmlReport.writeReport(collector, true);
 }
 
-if (program.reset) {
+var coverageFilename = path.join(savedReportDir, 'coverage.json');
+
+function resetCoverage() {
   if (fs.existsSync(coverageFilename)) {
     fs.unlinkSync(coverageFilename);
     console.log('deleted previous coverage file', coverageFilename);
   }
 }
-var coverageFilename = path.join(savedReportDir, 'coverage.json');
+
+if (program.reset) {
+  resetCoverage();
+}
 
 if (!fs.existsSync(savedReportDir)) {
   fs.mkdirSync(savedReportDir);
@@ -228,6 +233,10 @@ var server = http.createServer(function (req, res) {
   if (req.method === 'GET' && isGetReportRequest(req.url)) {
     console.log('coverage report', req.url);
     reportServer(req, res);
+  } else if (req.method === 'GET' && req.url === '/__reset') {
+    resetCoverage();
+    res.writeHead(200);
+    res.end();
   } else if (req.method === 'POST' && req.url === '/__coverage') {
     console.log('received coverage info');
     var str = '';

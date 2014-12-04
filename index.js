@@ -153,12 +153,12 @@ function prepareResponseSelectors(proxyRes, req, res) {
   var scriptSrc = '';
 
   res.writeHead = function (code, headers) {
+    console.log(code, req.method, req.url);
     if (code === 304) {
       scriptSrc = '';
       return _writeHead.apply(res, arguments);
     }
     var contentType = this.getHeader('content-type');
-    console.log('writing head', contentType);
     la(check.unemptyString(contentType), 'missing content type for code', code);
 
     // Strip off the content length since it will change.

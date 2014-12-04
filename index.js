@@ -212,6 +212,7 @@ function isGetReportRequest(url) {
 var server = http.createServer(function (req, res) {
   // You can define here your custom logic to handle the request
   // and then proxy the request.
+  console.log(req.method, req.url);
 
   if (req.method === 'GET' && isGetReportRequest(req.url)) {
     console.log('coverage report', req.url);
@@ -235,16 +236,28 @@ var server = http.createServer(function (req, res) {
     res.end();
   } else {
     console.log('proxy', req.method, req.url);
-    proxy.web(req, res, { target: program.target });
+    proxy.web(req, res, {
+      target: program.target,
+      xfwd: true
+    });
   }
 });
 
 proxy.on('proxyRes', function (proxyRes, req, res) {
-  // console.log('RAW Response from the target', JSON.stringify(proxyRes.headers, true, 2));
+  console.log('RAW Response from the target', JSON.stringify(proxyRes.headers, true, 2));
   if (shouldBeInstrumented(req.url)) {
     console.log('will instrument', req.url);
     prepareResponseSelectors(proxyRes, req, res);
   }
+});
+
+proxy.on('error', function (err, req, res) {
+  console.error(err);
+  res.writeHead(500, {
+    'Content-Type': 'text/plain'
+  });
+
+  res.end('Something went wrong. And we are reporting a custom error message.');
 });
 
 console.log(pkg.name, 'listening on port', program.port);

@@ -176,6 +176,10 @@ function prepareResponseSelectors(proxyRes, req, res) {
   var scriptSrc = '';
 
   res.writeHead = function (code, headers) {
+    if (code === 304) {
+      scriptSrc = '';
+      return _writeHead.apply(res, arguments);
+    }
     var contentType = this.getHeader('content-type');
     console.log('writing head', contentType);
     la(check.unemptyString(contentType), 'missing content type for code', code);
@@ -196,12 +200,14 @@ function prepareResponseSelectors(proxyRes, req, res) {
     if (data) {
       scriptSrc += data;
     }
-    var filename = saveSourceFile(scriptSrc, req.url);
-    var instrumented = instrumenter.instrumentSync(scriptSrc, filename);
-    instrumented += '\n\n';
-    instrumented += setupCoverageSend.toString() + '\n';
-    instrumented += 'setupCoverageSend();\n';
-    _write.call(res, instrumented);
+    if (scriptSrc) {
+      var filename = saveSourceFile(scriptSrc, req.url);
+      var instrumented = instrumenter.instrumentSync(scriptSrc, filename);
+      instrumented += '\n\n';
+      instrumented += setupCoverageSend.toString() + '\n';
+      instrumented += 'setupCoverageSend();\n';
+      _write.call(res, instrumented);
+    }
     _end.call(res);
   };
 }

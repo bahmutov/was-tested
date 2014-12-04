@@ -11,6 +11,21 @@ module.exports = function(grunt) {
       options: {
         jshintrc: '.jshintrc'
       }
+    },
+
+    help: {
+      options: {
+        destination: 'docs/help.md'
+      },
+      all: {}
+    },
+
+    readme: {
+      options: {
+        readme: './docs/README.tmpl.md',
+        docs: '.',
+        templates: './docs'
+      }
     }
   });
 

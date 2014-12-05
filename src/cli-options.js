@@ -18,6 +18,12 @@ function cliOptions() {
       description: 'target server url',
       default: 'http://127.0.0.1:3003'
     })
+    .option('host', {
+      string: true,
+      alias: 'h',
+      description: 'the http host header',
+      default: false
+    })
     .option('port', {
       number: true,
       alias: 'p',

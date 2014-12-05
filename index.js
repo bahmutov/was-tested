@@ -198,6 +198,12 @@ var server = http.createServer(function (req, res) {
   }
 });
 
+proxy.on('proxyReq', function(proxyReq, req, res, options) {
+    if(program.host){
+        proxyReq.setHeader("Host", program.host);
+    }
+});
+
 proxy.on('proxyRes', function (proxyRes, req, res) {
   console.log('RAW Response from the target', JSON.stringify(proxyRes.headers, true, 2));
   if (shouldBeInstrumented(req.url)) {

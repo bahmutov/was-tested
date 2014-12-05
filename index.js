@@ -179,6 +179,7 @@ function prepareResponseSelectors(proxyRes, req, res) {
     }
     if (scriptSrc) {
       var filename = saveSourceFile(scriptSrc, req.url);
+      console.log('full filename', filename, 'for script', req.url);
       var instrumented = instrumenter.instrumentSync(scriptSrc, filename);
       instrumented += '\n\n';
       instrumented += setupCoverageSend.toString() + '\n';

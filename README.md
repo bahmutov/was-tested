@@ -1,4 +1,4 @@
-# was-tested v0.5.1
+# was-tested v0.5.2
 
 > Code coverage proxy
 

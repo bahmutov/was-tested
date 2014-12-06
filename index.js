@@ -147,7 +147,11 @@ function prepareResponseSelectors(proxyRes, req, res) {
 //
 // Create a proxy server with custom application logic
 //
-var proxy = httpProxy.createProxyServer({});
+var proxyOpts = {};
+if (program.rehost){
+  proxyOpts.hostRewrite = program.rehost;
+}
+var proxy = httpProxy.createProxyServer(proxyOpts);
 var getReportUrlPrefix = '__report/';
 
 var reportServer = ecstatic({
@@ -193,9 +197,15 @@ var server = http.createServer(function (req, res) {
     console.log('proxy', req.method, req.url);
     proxy.web(req, res, {
       target: program.target,
-      xfwd: true
+      xfwd: false
     });
   }
+});
+
+proxy.on('proxyReq', function(proxyReq) {
+    if(program.host){
+        proxyReq.setHeader('Host', program.host);
+    }
 });
 
 proxy.on('proxyRes', function (proxyRes, req, res) {

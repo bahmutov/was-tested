@@ -18,6 +18,18 @@ function cliOptions() {
       description: 'target server url',
       default: 'http://127.0.0.1:3003'
     })
+    .option('host', {
+      string: true,
+      alias: 'H',
+      description: 'the http host header',
+      default: false
+    })
+    .option('rehost', {
+      string: true,
+      alias: 'z',
+      description: 'The host to rewrite to in the event of a redirect.',
+      default: false
+    })
     .option('port', {
       number: true,
       alias: 'p',

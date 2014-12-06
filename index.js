@@ -19,6 +19,15 @@ var program = require('./src/cli-options')();
 
 la(check.unemptyString(program.target), 'missing target server url', program);
 
+function prepareSaveDir() {
+  var saveFolder = './scripts/';
+  if (!fs.existsSync(saveFolder)) {
+    fs.mkdirSync(saveFolder);
+  }
+  return saveFolder;
+}
+var saveFolder = prepareSaveDir();
+
 function shouldInstrument(regex, url) {
   la(check.instance(regex, RegExp), 'not a regex', regex);
   la(check.unemptyString(url), 'expected url string');
@@ -32,18 +41,24 @@ la(check.fn(setupCoverageSend), 'missing send coverage function');
 
 function writeCoverageReports(coverage) {
   la(check.object(coverage), 'missing coverage object');
-  var Report = istanbul.Report;
+  // change names to file paths
+  Object.keys(coverage).forEach(function (name) {
+    la(check.unemptyString(coverage[name].path), 'missing path for', name);
+    coverage[name].path = path.join(saveFolder, name);
+    console.log('mapped', name, 'to', coverage[name].path);
+  });
 
   var collector = new Collector();
   collector.add(coverage);
 
+  var Report = istanbul.Report;
   var summaryReport = Report.create('text-summary');
   summaryReport.writeReport(collector);
   var htmlReport = Report.create('html');
   htmlReport.writeReport(collector, true);
 }
 
-var coverageFilename = path.join(savedReportDir, 'coverage.json');
+var coverageFilename = path.join(saveFolder, 'coverage.json');
 
 function resetCoverage() {
   if (fs.existsSync(coverageFilename)) {
@@ -73,15 +88,6 @@ function combineCoverage(coverage) {
   return combined;
 }
 
-function prepareSaveDir() {
-  var saveFolder = './scripts/';
-  if (!fs.existsSync(saveFolder)) {
-    fs.mkdirSync(saveFolder);
-  }
-  return saveFolder;
-}
-var saveFolder = prepareSaveDir();
-
 function urlToFilename(url) {
   la(check.unemptyString(url), 'missing url');
   // just leave filename
@@ -98,10 +104,10 @@ function saveSourceFile(src, url) {
   la(check.unemptyString(url), 'missing url');
 
   var filename = urlToFilename(url);
-  console.log('url', url, 'filename', filename);
 
   var fullFilename = path.join(saveFolder, filename);
   fs.writeFileSync(fullFilename, src);
+  console.log('saved url', url, 'as file', fullFilename);
   return fullFilename;
 }
 
@@ -138,8 +144,10 @@ function prepareResponseSelectors(proxyRes, req, res) {
     }
     if (scriptSrc) {
       var filename = saveSourceFile(scriptSrc, req.url);
-      console.log('full filename', filename, 'for script', req.url);
-      var instrumented = instrumenter.instrumentSync(scriptSrc, filename);
+      var shortName = path.basename(filename);
+      var instrumented = instrumenter.instrumentSync(scriptSrc, shortName);
+      console.log('short name', shortName, 'for script url', req.url);
+
       instrumented += '\n\n';
       instrumented += setupCoverageSend.toString() + '\n';
       instrumented += 'setupCoverageSend();\n';
@@ -186,7 +194,7 @@ var server = http.createServer(function (req, res) {
     res.writeHead(200);
     res.end();
   } else if (req.method === 'POST' && req.url === '/__coverage') {
-    console.log('received coverage info');
+    console.log('received coverage info, current folder', process.cwd());
     var str = '';
     req.on('data', function (chunk) {
       str += chunk;

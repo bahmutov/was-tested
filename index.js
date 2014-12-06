@@ -82,17 +82,22 @@ function prepareSaveDir() {
 }
 var saveFolder = prepareSaveDir();
 
-function saveSourceFile(src, url) {
-  la(check.unemptyString(src), 'missing file source');
+function urlToFilename(url) {
   la(check.unemptyString(url), 'missing url');
-
   // just leave filename
   var stripParams = url.replace(/\?.*$/, '');
   var lastSlash = stripParams.lastIndexOf('/');
   if (lastSlash !== -1) {
     stripParams = stripParams.substr(lastSlash + 1);
   }
-  var filename = stripParams;
+  return stripParams;
+}
+
+function saveSourceFile(src, url) {
+  la(check.unemptyString(src), 'missing file source');
+  la(check.unemptyString(url), 'missing url');
+
+  var filename = urlToFilename(url);
   console.log('url', url, 'filename', filename);
 
   var fullFilename = path.join(saveFolder, filename);

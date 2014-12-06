@@ -230,5 +230,7 @@ proxy.on('error', function (err, req, res) {
   res.end('Something went wrong. And we are reporting a custom error message.');
 });
 
-console.log(pkg.name, 'listening on port', program.port);
+var quote = require('quote');
+console.log(pkg.name, 'listening on port', program.port,
+  'instrumenting urls matching', quote(program.instrument));
 server.listen(program.port);

@@ -20,8 +20,14 @@ function cliOptions() {
     })
     .option('host', {
       string: true,
-      alias: 'h',
+      alias: 'H',
       description: 'the http host header',
+      default: false
+    })
+    .option('rehost', {
+      string: true,
+      alias: 'z',
+      description: 'The host to rewrite to in the event of a redirect.',
       default: false
     })
     .option('port', {

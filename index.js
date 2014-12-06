@@ -41,11 +41,20 @@ la(check.fn(setupCoverageSend), 'missing send coverage function');
 
 function writeCoverageReports(coverage) {
   la(check.object(coverage), 'missing coverage object');
+
   // change names to file paths
   Object.keys(coverage).forEach(function (name) {
     la(check.unemptyString(coverage[name].path), 'missing path for', name);
     coverage[name].path = path.join(saveFolder, name);
     console.log('mapped', name, 'to', coverage[name].path);
+  });
+
+  // remove references to non-existent files
+  Object.keys(coverage).forEach(function (name) {
+    if (!fs.existsSync(coverage[name].path)) {
+      console.error('cannot find source for coverage', coverage[name].path, 'removing');
+      delete coverage[name];
+    }
   });
 
   var collector = new Collector();

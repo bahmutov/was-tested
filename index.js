@@ -74,6 +74,10 @@ function resetCoverage() {
     fs.unlinkSync(coverageFilename);
     console.log('deleted previous coverage file', coverageFilename);
   }
+  if (fs.existsSync(saveFolder)) {
+    require('rimraf').sync(saveFolder);
+    console.log('deleted temp folder', saveFolder);
+  }
 }
 
 if (program.reset) {

@@ -18,6 +18,7 @@
     "lazy-ass": "0.5.3",
     "optimist": "0.6.1",
     "quote": "0.2.2",
+    "rimraf": "2.2.8",
     "update-notifier": "0.2.2"
   },
   "devDependencies": {

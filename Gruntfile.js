@@ -33,4 +33,5 @@ module.exports = function(grunt) {
   plugins.forEach(grunt.loadNpmTasks);
 
   grunt.registerTask('default', ['nice-package', 'deps-ok', 'jshint']);
+  grunt.registerTask('doc', ['help', 'readme']);
 };

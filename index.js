@@ -206,6 +206,16 @@ var server = http.createServer(function (req, res) {
     resetCoverage();
     res.writeHead(200);
     res.end();
+  } else if (req.method === 'GET' && req.url === '/__coverage') {
+    var coverageFilename = path.join(saveFolder, 'coverage.json');
+    if (!fs.existsSync(coverageFilename)) {
+      console.error('cannot find coverage', coverageFilename);
+      res.writeHead(404);
+      res.end();
+    } else {
+      res.writeHead(200, {'Content-Type': 'application/json'});
+      res.end(fs.readFileSync(coverageFilename, 'utf-8'));
+    }
   } else if (req.method === 'POST' && req.url === '/__coverage') {
     console.log('received coverage info, current folder', process.cwd());
     var str = '';

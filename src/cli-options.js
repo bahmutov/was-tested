@@ -48,6 +48,12 @@ function cliOptions() {
       description: 'erase previously collected coverage',
       default: false
     })
+    .option('folder', {
+      string: true,
+      alias: 'f',
+      description: 'working folder',
+      default: null
+    })
     .usage(info)
     .argv;
 

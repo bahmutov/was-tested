@@ -1,5 +1,5 @@
 was-tested - Code coverage proxy
-  version: 0.6.0
+  version: 0.8.0
   author: "Gleb Bahmutov <gleb.bahmutov@gmail.com>"
 
 Options:
@@ -10,3 +10,4 @@ Options:
   --port, -p        local proxy port                                    [default: 5050]
   --instrument, -i  instrument url RegExp                               [default: "app.js$"]
   --reset, -r       erase previously collected coverage                 [default: false]
+  --folder, -f      working folder                                      [default: null]

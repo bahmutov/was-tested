@@ -13,11 +13,14 @@ var http = require('http'),
   httpProxy = require('http-proxy');
 var savedReportDir = './html-report';
 
-console.log(pkg.name, 'starting in', process.cwd());
-
 require('./src/check-updates')();
 
 var program = require('./src/cli-options')();
+if (program.folder) {
+  la(fs.existsSync(program.folder), 'cannot find working folder', program.folder);
+  process.chdir(program.folder);
+}
+console.log(pkg.name, 'starting in', process.cwd());
 
 la(check.unemptyString(program.target), 'missing target server url', program);
 

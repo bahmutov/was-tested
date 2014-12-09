@@ -124,6 +124,9 @@ function saveSourceFile(src, url) {
   var filename = urlToFilename(url);
 
   var fullFilename = path.join(saveFolder, filename);
+  if (!fs.existsSync(saveFolder)) {
+    fs.mkdirSync(saveFolder);
+  }
   fs.writeFileSync(fullFilename, src);
   console.log('saved url', url, 'as file', fullFilename);
   return fullFilename;

@@ -1,4 +1,4 @@
-# was-tested v0.8.0
+# was-tested v0.8.1
 
 > Code coverage proxy
 
@@ -24,7 +24,7 @@
 
 ```
 was-tested - Code coverage proxy
-  version: 0.8.0
+  version: 0.8.1
   author: "Gleb Bahmutov <gleb.bahmutov@gmail.com>"
 
 Options:

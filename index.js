@@ -13,6 +13,8 @@ var http = require('http'),
   httpProxy = require('http-proxy');
 var savedReportDir = './html-report';
 
+console.log(pkg.name, 'starting in', process.cwd());
+
 require('./src/check-updates')();
 
 var program = require('./src/cli-options')();
@@ -264,4 +266,5 @@ proxy.on('error', function (err, req, res) {
 var quote = require('quote');
 console.log(pkg.name, 'listening on port', program.port,
   'instrumenting urls matching', quote(program.instrument));
+console.log('target url', program.target);
 server.listen(program.port);

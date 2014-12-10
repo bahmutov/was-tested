@@ -22,6 +22,8 @@
 
 
 
+![overview](https://raw.githubusercontent.com/bahmutov/was-tested/master/images/was-tested-overview.png)
+
 ```
 was-tested - Code coverage proxy
   version: 0.8.1
@@ -38,6 +40,8 @@ Options:
   --folder, -f      working folder                                      [default: null]
 
 ```
+
+Works well with [tested-commits](https://github.com/bahmutov/tested-commits).
 
 ### Small print
 

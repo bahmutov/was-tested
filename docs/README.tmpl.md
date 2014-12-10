@@ -6,6 +6,8 @@
 
 ![overview](https://raw.githubusercontent.com/bahmutov/was-tested/master/images/was-tested-overview.png)
 
+Read [Code coverage proxy](http://bahmutov.calepin.co/code-coverage-proxy.html)
+
 ```
 {%= _.doc("./docs/help.md") %}
 ```

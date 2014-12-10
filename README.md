@@ -24,6 +24,8 @@
 
 ![overview](https://raw.githubusercontent.com/bahmutov/was-tested/master/images/was-tested-overview.png)
 
+Read [Code coverage proxy](http://bahmutov.calepin.co/code-coverage-proxy.html)
+
 ```
 was-tested - Code coverage proxy
   version: 0.8.1

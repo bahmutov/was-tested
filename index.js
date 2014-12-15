@@ -42,7 +42,7 @@ function shouldInstrument(regex, url) {
 var shouldBeInstrumented = shouldInstrument.bind(null, new RegExp(program.instrument));
 
 var setupCoverageSend = require('./src/send-coverage');
-la(check.fn(setupCoverageSend), 'missing send coverage function');
+la(check.function(setupCoverageSend), 'missing send coverage function');
 
 function writeCoverageReports(coverage) {
   la(check.object(coverage), 'missing coverage object');
@@ -50,7 +50,7 @@ function writeCoverageReports(coverage) {
   // change names to file paths
   Object.keys(coverage).forEach(function (name) {
     la(check.unemptyString(coverage[name].path), 'missing path for', name);
-    coverage[name].path = path.join(saveFolder, name);
+    coverage[name].path = './' + path.join(saveFolder, name);
     console.log('mapped', name, 'to', coverage[name].path);
   });
 
@@ -59,7 +59,16 @@ function writeCoverageReports(coverage) {
     if (!fs.existsSync(coverage[name].path)) {
       console.error('cannot find source for coverage', coverage[name].path, 'removing');
       delete coverage[name];
+    } else {
+      console.log(coverage[name].path);
     }
+  });
+
+  // add ./ in front of each name, otherwise html reporter removes first 2 characters
+  Object.keys(coverage).forEach(function (name) {
+    var c = coverage[name];
+    delete coverage[name];
+    coverage['./' + name] = c;
   });
 
   var collector = new Collector();
@@ -70,6 +79,8 @@ function writeCoverageReports(coverage) {
   summaryReport.writeReport(collector);
   var htmlReport = Report.create('html');
   htmlReport.writeReport(collector, true);
+
+  console.log('saved coverage reports');
 }
 
 var coverageFilename = path.join(saveFolder, 'coverage.json');

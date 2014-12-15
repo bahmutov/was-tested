@@ -11,10 +11,10 @@
   },
   "contributors": [],
   "dependencies": {
-    "check-types": "1.4.0",
+    "check-types": "2.0.0",
     "ecstatic": "0.5.7",
-    "http-proxy": "1.7.1",
-    "istanbul": "0.3.2",
+    "http-proxy": "1.7.3",
+    "istanbul": "0.3.5",
     "lazy-ass": "0.5.3",
     "optimist": "0.6.1",
     "quote": "0.2.2",

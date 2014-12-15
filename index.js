@@ -180,15 +180,23 @@ function prepareResponseSelectors(proxyRes, req, res) {
       scriptSrc += data;
     }
     if (scriptSrc) {
-      var filename = saveSourceFile(scriptSrc, req.url);
-      var shortName = path.basename(filename);
-      var instrumented = instrumenter.instrumentSync(scriptSrc, shortName);
-      console.log('short name', shortName, 'for script url', req.url);
+      try {
+        var filename = saveSourceFile(scriptSrc, req.url);
+        var shortName = path.basename(filename);
+        var instrumented = instrumenter.instrumentSync(scriptSrc, shortName);
+        console.log('short name', shortName, 'for script url', req.url);
 
-      instrumented += '\n\n';
-      instrumented += setupCoverageSend.toString() + '\n';
-      instrumented += 'setupCoverageSend();\n';
-      _write.call(res, instrumented);
+        instrumented += '\n\n';
+        instrumented += setupCoverageSend.toString() + '\n';
+        instrumented += 'setupCoverageSend();\n';
+        _write.call(res, instrumented);
+      } catch (err) {
+        console.error('could not instrument js file', req.url);
+        console.error(err.message);
+        console.error('will send original source');
+        console.log(scriptSrc);
+        _write.call(res, scriptSrc);
+      }
     }
     _end.call(res);
   };

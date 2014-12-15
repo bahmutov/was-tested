@@ -264,6 +264,12 @@ var server = http.createServer(function (req, res) {
     res.end();
   } else {
     console.log('proxy', req.method, req.url);
+
+    // make sure the JavaScript files are not gzipped
+    if (/\.js/.test(req.url)) {
+      req.headers['accept-encoding'] = 'text/plain';
+    }
+
     proxy.web(req, res, {
       target: program.target,
       xfwd: false

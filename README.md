@@ -45,6 +45,15 @@ Options:
 
 Works well with [tested-commits](https://github.com/bahmutov/tested-commits).
 
+### Use against github pages
+
+To instrument static pages on github, for example [glebbahmutov.com/foo-bar/](http://glebbahmutov.com/foo-bar/)
+that points to gh-pages branch in [foo-bar](https://github.com/bahmutov/foo-bar) use `--host` option.
+
+`was-tested --target http://glebbahmutov.com/foo-bar/ --host "glebbahmutov.com"`
+
+then open `localhost:5050` in the browser.
+
 ### Small print
 
 Author: Gleb Bahmutov &copy; 2014

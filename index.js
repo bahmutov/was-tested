@@ -186,15 +186,16 @@ if (program.rehost){
   proxyOpts.hostRewrite = program.rehost;
 }
 var proxy = httpProxy.createProxyServer(proxyOpts);
-var getReportUrlPrefix = '__report/';
+var getReportUrlPrefix = '__report';
 
 var reportServer = ecstatic({
   root: savedReportDir,
-  baseDir: getReportUrlPrefix
+  baseDir: getReportUrlPrefix + '/'
 });
 
 function isGetReportRequest(url) {
-  return url.indexOf(getReportUrlPrefix) === 1;
+  var urlRegexp = new RegExp('^/' + getReportUrlPrefix + '/?');
+  return urlRegexp.test(url);
 }
 
 //
@@ -210,11 +211,11 @@ var server = http.createServer(function (req, res) {
   if (req.method === 'GET' && isGetReportRequest(req.url)) {
     console.log('coverage report', req.url);
     reportServer(req, res);
-  } else if (req.method === 'GET' && req.url === '/__reset') {
+  } else if (req.method === 'GET' && /^\/__reset\/?/.test(req.url)) {
     resetCoverage();
     res.writeHead(200);
     res.end();
-  } else if (req.method === 'GET' && req.url === '/__coverage') {
+  } else if (req.method === 'GET' && /^\/__coverage\/?/.test(req.url)) {
     var coverageFilename = path.join(saveFolder, 'coverage.json');
     if (!fs.existsSync(coverageFilename)) {
       console.error('cannot find coverage', coverageFilename);
@@ -224,7 +225,7 @@ var server = http.createServer(function (req, res) {
       res.writeHead(200, {'Content-Type': 'application/json'});
       res.end(fs.readFileSync(coverageFilename, 'utf-8'));
     }
-  } else if (req.method === 'POST' && req.url === '/__coverage') {
+  } else if (req.method === 'POST' && /^\/__coverage\/?/.test(req.url)) {
     console.log('received coverage info, current folder', process.cwd());
     var str = '';
     req.on('data', function (chunk) {

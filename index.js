@@ -83,6 +83,11 @@ function resetCoverage() {
     require('rimraf').sync(saveFolder);
     console.log('deleted temp folder', saveFolder);
   }
+
+  if (fs.existsSync(savedReportDir)) {
+    require('rimraf').sync(savedReportDir);
+    console.log('deleted html report folder', savedReportDir);
+  }
 }
 
 if (program.reset) {

@@ -1,5 +1,5 @@
 was-tested - Code coverage proxy
-  version: 0.8.1
+  version: 0.9.0
   author: "Gleb Bahmutov <gleb.bahmutov@gmail.com>"
 
 Options:

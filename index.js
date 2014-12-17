@@ -2,7 +2,7 @@
 
 require('lazy-ass');
 var pkg = require('./package.json');
-var check = require('check-types');
+var check = require('check-more-types');
 var istanbul = require('istanbul');
 var instrumenter = new istanbul.Instrumenter();
 var fs = require('fs');
@@ -40,7 +40,7 @@ function shouldInstrument(regex, url) {
 var shouldBeInstrumented = shouldInstrument.bind(null, new RegExp(program.instrument));
 
 var setupCoverageSend = require('./src/send-coverage');
-la(check.function(setupCoverageSend), 'missing send coverage function');
+la(check.fn(setupCoverageSend), 'missing send coverage function');
 
 var coverageFilename = path.join(saveFolder, 'coverage.json');
 

@@ -11,7 +11,8 @@
   },
   "contributors": [],
   "dependencies": {
-    "check-types": "2.0.0",
+    "check-more-types": "1.1.0",
+    "check-types": "1.4.0",
     "ecstatic": "0.5.7",
     "http-proxy": "1.7.3",
     "istanbul": "0.3.5",

@@ -23,6 +23,13 @@ module.exports = function(grunt) {
       }
     },
 
+    jscs: {
+      src: [sourceFiles, '!src/send-coverage.js'],
+      options: {
+          config: 'jscs.json'
+      }
+    },
+
     help: {
       options: {
         destination: 'docs/help.md'
@@ -43,6 +50,6 @@ module.exports = function(grunt) {
   plugins.forEach(grunt.loadNpmTasks);
 
   grunt.registerTask('doc', ['help', 'readme']);
-  grunt.registerTask('lint', ['jshint', 'eslint']);
+  grunt.registerTask('lint', ['jshint', 'eslint', 'jscs']);
   grunt.registerTask('default', ['nice-package', 'deps-ok', 'lint', 'doc']);
 };

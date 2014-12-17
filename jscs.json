@@ -1,0 +1,11 @@
+{
+  "requireCurlyBraces": true,
+  "requireDotNotation": true,
+  "requireSpaceAfterLineComment": true,
+  "validateQuoteMarks": "'",
+  "validateIndentation": 2,
+  "requireSpacesInFunctionExpression": {
+    "beforeOpeningRoundBrace": true,
+    "beforeOpeningCurlyBrace": true
+  }
+}

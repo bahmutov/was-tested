@@ -278,10 +278,10 @@ var server = http.createServer(function (req, res) {
   }
 });
 
-proxy.on('proxyReq', function(proxyReq) {
-    if(program.host){
-        proxyReq.setHeader('Host', program.host);
-    }
+proxy.on('proxyReq', function (proxyReq) {
+  if(program.host){
+    proxyReq.setHeader('Host', program.host);
+  }
 });
 
 proxy.on('proxyRes', function (proxyRes, req, res) {

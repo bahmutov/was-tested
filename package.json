@@ -28,6 +28,7 @@
     "grunt-deps-ok": "0.5.1",
     "grunt-eslint": "2.1.0",
     "grunt-help": "0.4.1",
+    "grunt-jscs": "1.0.0",
     "grunt-nice-package": "0.9.2",
     "grunt-readme": "0.4.5",
     "matchdep": "0.3.0",

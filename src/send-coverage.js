@@ -2,6 +2,7 @@
 // so it makes no sense to lint it here
 function setupCoverageSend() {
   /* jshint ignore:start */
+  /* eslint ignore:start */
   if (typeof window.__sendCoverageSetup === 'undefined') {
 
     var _previousCoverage;
@@ -57,6 +58,7 @@ function setupCoverageSend() {
     }());
   }
   /* jshint ignore:end */
+  /* eslint ignore:end */
 }
 
 module.exports = setupCoverageSend;

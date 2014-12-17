@@ -25,11 +25,11 @@ console.log(pkg.name, 'starting in', process.cwd());
 la(check.unemptyString(program.target), 'missing target server url', program);
 
 function prepareSaveDir() {
-  var saveFolder = './scripts/';
-  if (!fs.existsSync(saveFolder)) {
-    fs.mkdirSync(saveFolder);
+  var saveToFolder = './scripts/';
+  if (!fs.existsSync(saveToFolder)) {
+    fs.mkdirSync(saveToFolder);
   }
-  return saveFolder;
+  return saveToFolder;
 }
 var saveFolder = prepareSaveDir();
 
@@ -149,9 +149,10 @@ function saveSourceFile(src, url) {
 }
 
 function prepareResponseSelectors(proxyRes, req, res) {
-  var _write      = res.write;
-  var _end        = res.end;
-  var _writeHead  = res.writeHead;
+  /* eslint no-underscore-dangle:0 */
+  var _write = res.write;
+  var _end = res.end;
+  var _writeHead = res.writeHead;
   var scriptSrc = '';
 
   res.writeHead = function (code, headers) {
@@ -240,7 +241,7 @@ var server = http.createServer(function (req, res) {
     res.writeHead(200);
     res.end();
   } else if (req.method === 'GET' && /^\/__coverage\/?/.test(req.url)) {
-    var coverageFilename = path.join(saveFolder, 'coverage.json');
+    la(check.unemptyString(coverageFilename), 'missing coverage filename');
     if (!fs.existsSync(coverageFilename)) {
       console.error('cannot find coverage', coverageFilename);
       res.writeHead(404);

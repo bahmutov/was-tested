@@ -1,5 +1,5 @@
 was-tested - Code coverage proxy
-  version: 0.9.0
+  version: 0.0.0-semantic-release
   author: "Gleb Bahmutov <gleb.bahmutov@gmail.com>"
 
 Options:

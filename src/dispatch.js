@@ -1,5 +1,5 @@
-require('lazy-ass');
-var check = require('check-types');
+var la = require('lazy-ass');
+var check = require('check-more-types');
 var ecstatic = require('ecstatic');
 var istanbul = require('istanbul');
 var Collector = istanbul.Collector;

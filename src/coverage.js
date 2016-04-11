@@ -1,5 +1,5 @@
-require('lazy-ass');
-var check = require('check-types');
+var la = require('lazy-ass');
+var check = require('check-more-types');
 var fs = require('fs');
 var rimraf = require('rimraf');
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-require('lazy-ass');
+var la = require('lazy-ass');
 var pkg = require('./package.json');
 var check = require('check-more-types');
 var istanbul = require('istanbul');

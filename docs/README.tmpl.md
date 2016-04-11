@@ -1,4 +1,4 @@
-# {%= name %} v{%= version %}
+# {%= name %}
 
 > {%= description %}
 
@@ -6,7 +6,7 @@
 
 ![overview](https://raw.githubusercontent.com/bahmutov/was-tested/master/images/was-tested-overview.png)
 
-Read [Code coverage proxy](http://bahmutov.calepin.co/code-coverage-proxy.html)
+Read [Code coverage proxy](https://glebbahmutov.com/blog/code-coverage-proxy/) blog post.
 
 ```
 {%= _.doc("./docs/help.md") %}

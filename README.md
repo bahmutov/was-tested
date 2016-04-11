@@ -1,4 +1,4 @@
-# was-tested v0.0.0-semantic-release
+# was-tested
 
 > Code coverage proxy
 
@@ -27,7 +27,7 @@
 
 ![overview](https://raw.githubusercontent.com/bahmutov/was-tested/master/images/was-tested-overview.png)
 
-Read [Code coverage proxy](http://bahmutov.calepin.co/code-coverage-proxy.html)
+Read [Code coverage proxy](https://glebbahmutov.com/blog/code-coverage-proxy/) blog post.
 
 ```
 was-tested - Code coverage proxy

@@ -75,6 +75,8 @@
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "pretest": "npm run format && npm run lint",
     "lint": "standard --verbose *.js src/*.js",
-    "format": "standard-format -w *.js src/*.js"
+    "format": "standard-format -w *.js src/*.js",
+    "demo-foo-bar": "node index.js --target http://glebbahmutov.com/foo-bar/ --host glebbahmutov.com",
+    "demo-8080": "node index.js --target http://localhost:8080"
   }
 }

@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+'use strict'
+
 var la = require('lazy-ass')
 var pkg = require('./package.json')
 var check = require('check-more-types')
@@ -34,7 +36,9 @@ var saveFolder = prepareSaveDir()
 function shouldInstrument (regex, url) {
   la(check.instance(regex, RegExp), 'not a regex', regex)
   la(check.unemptyString(url), 'expected url string')
-  return regex.test(url)
+  const shouldInstrument = regex.test(url)
+  console.log('should instrument %s?', url, shouldInstrument)
+  return shouldInstrument
 }
 
 var shouldBeInstrumented = shouldInstrument.bind(null, new RegExp(program.instrument))
@@ -92,7 +96,7 @@ function prepareResponseSelectors (proxyRes, req, res) {
   var scriptSrc = ''
 
   res.writeHead = function (code, headers) {
-    console.log(code, req.method, req.url)
+    console.log('writing head for', req.method, req.url)
     if (code === 304) {
       scriptSrc = ''
       return _writeHead.apply(res, arguments)
@@ -130,8 +134,8 @@ function prepareResponseSelectors (proxyRes, req, res) {
       } catch (err) {
         console.error('could not instrument js file', req.url)
         console.error(err.message)
-        console.error('will send original source')
-        console.log(scriptSrc)
+        console.error('will send the original source')
+        // console.log(scriptSrc)
         _write.call(res, scriptSrc)
       }
     }

@@ -1,10 +1,10 @@
-var pkg = require('../package.json');
+var pkg = require('../package.json')
 var info = pkg.name + ' - ' + pkg.description + '\n' +
-  '  version: ' + pkg.version + '\n' +
-  '  author: ' + JSON.stringify(pkg.author);
+'  version: ' + pkg.version + '\n' +
+'  author: ' + JSON.stringify(pkg.author)
 
-function cliOptions() {
-  var optimist = require('optimist');
+function cliOptions () {
+  var optimist = require('optimist')
   var program = optimist
     .option('version', {
       boolean: true,
@@ -55,19 +55,19 @@ function cliOptions() {
       default: null
     })
     .usage(info)
-    .argv;
+    .argv
 
   if (program.version) {
-    console.log(info);
-    process.exit(0);
+    console.log(info)
+    process.exit(0)
   }
 
   if (program.help || program.h) {
-    optimist.showHelp();
-    process.exit(0);
+    optimist.showHelp()
+    process.exit(0)
   }
 
-  return program;
+  return program
 }
 
-module.exports = cliOptions;
+module.exports = cliOptions

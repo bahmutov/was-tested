@@ -46,7 +46,9 @@
     "grunt-readme": "0.4.5",
     "matchdep": "0.3.0",
     "pre-git": "3.8.3",
-    "semantic-release": "4.3.5"
+    "semantic-release": "4.3.5",
+    "standard": "6.0.8",
+    "standard-format": "2.1.1"
   },
   "engines": {
     "node": "> 0.10.*"
@@ -70,6 +72,9 @@
   },
   "scripts": {
     "test": "grunt",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "pretest": "npm run format && npm run lint",
+    "lint": "standard --verbose *.js src/*.js",
+    "format": "standard-format -w *.js src/*.js"
   }
 }

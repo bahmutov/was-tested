@@ -1,34 +1,10 @@
-module.exports = function(grunt) {
-  'use strict';
+'use strict'
 
-  var sourceFiles = [
-    'index.js', 'src/**/*.js'
-  ];
+module.exports = function (grunt) {
+  'use strict'
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-
-    jshint: {
-      all: sourceFiles,
-      options: {
-        jshintrc: '.jshintrc'
-      }
-    },
-
-    eslint: {
-      target: [sourceFiles, '!src/send-coverage.js'],
-      options: {
-        config: 'eslint.json',
-        rulesdir: ['./node_modules/eslint-rules']
-      }
-    },
-
-    jscs: {
-      src: [sourceFiles, '!src/send-coverage.js'],
-      options: {
-          config: 'jscs.json'
-      }
-    },
 
     help: {
       options: {
@@ -44,12 +20,11 @@ module.exports = function(grunt) {
         templates: './docs'
       }
     }
-  });
+  })
 
-  var plugins = require('matchdep').filterDev('grunt-*');
-  plugins.forEach(grunt.loadNpmTasks);
+  var plugins = require('matchdep').filterDev('grunt-*')
+  plugins.forEach(grunt.loadNpmTasks)
 
-  grunt.registerTask('doc', ['help', 'readme']);
-  grunt.registerTask('lint', ['jshint', 'eslint', 'jscs']);
-  grunt.registerTask('default', ['nice-package', 'deps-ok', 'lint', 'doc']);
-};
+  grunt.registerTask('doc', ['help', 'readme'])
+  grunt.registerTask('default', ['nice-package', 'deps-ok', 'doc'])
+}

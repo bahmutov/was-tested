@@ -66,6 +66,6 @@
     "lint": "standard --verbose *.js src/*.js",
     "pretest": "npm run format && npm run lint",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
-    "test": "echo Write tests",
+    "test": "echo Write tests"
   }
 }

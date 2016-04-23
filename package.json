@@ -34,6 +34,7 @@
     "update-notifier": "0.6.3"
   },
   "devDependencies": {
+    "http-server": "0.9.0",
     "pre-git": "3.8.3",
     "semantic-release": "6.2.1",
     "standard": "6.0.8",
@@ -66,6 +67,8 @@
     "lint": "standard --verbose *.js src/*.js",
     "pretest": "npm run format && npm run lint",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
-    "test": "echo Write tests"
+    "test": "echo Write tests",
+    "local-demo-server": "http-server -p 3003 -c-1 test/simple-server",
+    "local-demo-proxy": "node index.js --target http://localhost:3003"
   }
 }

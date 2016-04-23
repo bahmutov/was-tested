@@ -3,10 +3,14 @@
 <head>
   <meta charset="utf-8">
   <title>was-tested test</title>
-  <script src="app.js"></script>
 </head>
 <body>
-  <h2>was-tested</h2>
-  <p>Start the local server in this folder using <pre>http-server -p 3003</pre></p>
+  <h2>was-tested local demo</h2>
+  <p>Start local server using <code>npm run local-demo-server</code></p>
+  <p>Then start the proxy using <code>npm run local-demo-proxy</code></p>
+  <p>Open the browser pointing at the proxy <code>open http://localhost:5050</code></p>
+  <p>See the coverage report at <code>http://localhost:5050/__report</code></p>
+  <script src="https://rawgit.com/bahmutov/console-log-div/master/console-log-div.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>

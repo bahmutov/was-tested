@@ -3,3 +3,4 @@ coverage.json
 saved/
 html-report/
 scripts/
+.DS_Store

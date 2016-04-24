@@ -12,6 +12,10 @@ var path = require('path')
 var http = require('http')
 var httpProxy = require('http-proxy')
 var savedReportDir = './html-report'
+var startLiverage = require('./src/liverage')
+
+// for broadcasting real time updates
+var realTimeApi
 
 require('./src/check-updates')()
 
@@ -85,6 +89,11 @@ function saveSourceFile (src, url) {
   }
   fs.writeFileSync(fullFilename, src)
   console.log('saved url', url, 'as file', fullFilename)
+
+  if (realTimeApi) {
+    realTimeApi.setSource(src, filename)
+  }
+
   return fullFilename
 }
 
@@ -117,10 +126,12 @@ function prepareResponseSelectors (proxyRes, req, res) {
   }
 
   res.end = function (data) {
+    // console.log('res.end data')
     if (data) {
       scriptSrc += data
     }
     if (scriptSrc) {
+      // console.log('res.end script src', scriptSrc)
       try {
         var filename = saveSourceFile(scriptSrc, req.url)
         var shortName = path.basename(filename)
@@ -182,8 +193,17 @@ proxy.on('error', function (err, req, res) {
   res.end('Something went wrong. And we are reporting a custom error message.')
 })
 
-var quote = require('quote')
-console.log(pkg.name, 'listening on port', program.port,
-  'instrumenting urls matching', quote(program.instrument))
-console.log('target url', program.target)
-server.listen(program.port)
+startLiverage()
+  .catch((err) => {
+    console.error(err)
+  })
+  .then(function (_realTimeApi) {
+    if (_realTimeApi) {
+      realTimeApi = _realTimeApi
+    }
+    var quote = require('quote')
+    console.log(pkg.name, 'listening on port', program.port,
+      'instrumenting urls matching', quote(program.instrument))
+    console.log('target url', program.target)
+    server.listen(program.port)
+  })

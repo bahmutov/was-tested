@@ -31,7 +31,8 @@
     "optimist": "0.6.1",
     "quote": "0.4.0",
     "rimraf": "2.5.2",
-    "update-notifier": "0.6.3"
+    "update-notifier": "0.6.3",
+    "ws": "1.1.0"
   },
   "devDependencies": {
     "http-server": "0.9.0",
